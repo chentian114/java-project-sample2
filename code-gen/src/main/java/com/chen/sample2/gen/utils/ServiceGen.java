@@ -1,21 +1,25 @@
 package com.chen.sample2.gen.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.chen.sample2.gen.GenTool;
+import com.chen.sample2.gen.dto.ColumnInfo;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServiceGen {
     /**
      * 功能：生成Service主体代码
      */
-    public static void parse(String tableComment, String entityName) {
+    public static void parse(String tableComment, String entityName, List<ColumnInfo> columnInfoList) {
         String svcName = "I" + entityName + "Service";
         String svcImplName = entityName + "ServiceImpl";
         genSvc(tableComment, entityName, svcName);
-        genSvcImpl(tableComment, entityName, svcName, svcImplName);
+        genSvcImpl(tableComment, entityName, svcName, svcImplName,columnInfoList);
     }
 
     /**
@@ -71,7 +75,7 @@ public class ServiceGen {
      * @param svcName
      * @param svcImplName
      */
-    private static void genSvcImpl(String tableComment, String entityName, String svcName, String svcImplName) {
+    private static void genSvcImpl(String tableComment, String entityName, String svcName, String svcImplName, List<ColumnInfo> columnInfoList) {
         StringBuffer sb = new StringBuffer();
         sb.append("package " + GenTool.svcImplPackageOutPath + ";\r\n");
         sb.append("\r\n");
@@ -80,6 +84,8 @@ public class ServiceGen {
         sb.append("import " + GenTool.rootPackage + "tool.message.ResponseMsg;\r\n");
         sb.append("import " + GenTool.rootPackage + "tool.message.RequestMsg;\r\n");
         sb.append("import " + GenTool.rootPackage + "tool.message.PageResult;\r\n");
+        sb.append("import " + GenTool.rootPackage + "tool.persistence.SimpleCriteria;\r\n");
+        sb.append("import " + GenTool.rootPackage + "tool.persistence.SimpleRestrictions;\r\n");
         sb.append("import " + GenTool.entityPackageOutPath + "." + entityName + ";\r\n");
         sb.append("import " + GenTool.svcPackageOutPath + "." + svcName + ";\r\n");
         sb.append("import " + GenTool.daoPackageOutPath + "." + entityName + "Dao;\r\n");
@@ -106,10 +112,27 @@ public class ServiceGen {
 
         sb.append("\t@Override\n");
         sb.append("\tpublic ResponseMsg queryPage(RequestMsg requestMsg){\r\n");
+        sb.append("\t\t"+entityName+ " " + GenTool.initcap1(entityName) + " = requestMsg.getParams().toBean(" + entityName + ".class);\n");
+
+        List<String> queryList = new ArrayList<>();
+        for (ColumnInfo columnInfo : columnInfoList) {
+            if(!"id".equals(columnInfo.getColumnName()) && !"uid".equals(columnInfo.getColumnName())
+                && !"create_time".equals(columnInfo.getColumnName()) && !"update_time".equals(columnInfo.getColumnName())
+                && !"modify_time".equals(columnInfo.getColumnName())){
+                queryList.add("\t\t\t.add(SimpleRestrictions.eq(\""+GenTool.initcap2(columnInfo.getColumnName())+"\","+GenTool.initcap1(entityName)+".get"+GenTool.initcap0(columnInfo.getColumnName())+"()))\n");
+            }
+        }
+        if(CollectionUtil.isNotEmpty(queryList)) {
+            sb.append("\t\tSimpleCriteria<" + entityName + "> simpleCriteria = new SimpleCriteria.Builder<" + entityName + ">()\n");
+            queryList.forEach(sb::append);
+            sb.append("\t\t\t.builder();\n\n");
+        }
+
         sb.append("\t\tSort sort = new Sort(Sort.Direction.DESC, \"createTime\");\n");
-        sb.append("\t\tPageable pageable = PageRequest.of(requestMsg.getPageNumber(), requestMsg.getPageSize(), sort);\n");
-        sb.append("\t\tPage<"+entityName+"> result = " + GenTool.initcap1(entityName) + "Dao.findAll(pageable);\n");
-        sb.append("\t\tPageResult<"+entityName+"> pageResult = new PageResult<>(result.getNumber(),result.getSize(),result.getTotalElements(),result.getTotalPages(),result.getContent());\n");
+        sb.append("\t\tPageable pageable = PageRequest.of(requestMsg.getPageNum(), requestMsg.getPageSize(), sort);\n");
+        sb.append("\t\tPage<"+entityName+"> page = " + GenTool.initcap1(entityName) + "Dao.findAll(simpleCriteria,pageable);\n\n");
+        sb.append("\t\tPageResult<"+entityName+"> pageResult = new PageResult<>(page);\n");
+        sb.append("\t\tlogger.info(\"pageResult:{}\",pageResult);\n");
         sb.append("\t\treturn ResponseMsg.createSuccessResponse(pageResult);\n");
         sb.append("\t}\n");
         sb.append("}\r\n");

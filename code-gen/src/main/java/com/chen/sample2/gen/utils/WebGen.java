@@ -1,6 +1,7 @@
 package com.chen.sample2.gen.utils;
 
 import com.chen.sample2.gen.GenTool;
+import com.chen.sample2.gen.dto.PrimaryKeyDto;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,7 +12,7 @@ public class WebGen {
     /**
      * 功能：生成Dao类主体代码
      */
-    public static void parse(String tableComment, String entityName, String priType) {
+    public static void parse(String tableComment, String entityName, PrimaryKeyDto primaryKeyDto) {
         String webName = entityName + "Controller";
         StringBuffer sb = new StringBuffer();
         sb.append("package " + GenTool.webPackageOutPath + ";\r\n");
@@ -23,6 +24,7 @@ public class WebGen {
         sb.append("import " + GenTool.rootPackage + "tool.message.ResponseMsg;\r\n");
         sb.append("import " + GenTool.svcPackageOutPath + ".I" + entityName + "Service;\r\n");
         sb.append("import org.springframework.beans.factory.annotation.Autowired;\r\n");
+        sb.append("import cn.hutool.json.JSONUtil;\r\n");
         sb.append("import org.springframework.web.bind.annotation.*;\r\n\r\n");
 
         //注释部分
@@ -40,34 +42,39 @@ public class WebGen {
         sb.append("\t@Autowired\r\n");
         sb.append("\tprivate I" + entityName + "Service " + GenTool.initcap1(entityName) + "Service;\r\n\r\n");
 
-        sb.append("\t@PostMapping(\"/save\")\r\n");
-        sb.append("\tpublic ResponseMsg save(@RequestBody " + entityName + " model) {\r\n");
+        sb.append("\t@GetMapping(\"/getById/{"+primaryKeyDto.getPrimaryName()+"}\")\r\n");
+        sb.append("\tpublic ResponseMsg getById(@PathVariable "+ primaryKeyDto.getPrimaryType()+" "+ primaryKeyDto.getPrimaryName() + ") {\r\n");
+        sb.append("\t\tlogger.info(\"params:{}\", "+primaryKeyDto.getPrimaryName()+");\r\n");
+        sb.append("\t\t" + entityName + " result = " + GenTool.initcap1(entityName) + "Service.findById("+primaryKeyDto.getPrimaryName()+");\r\n");
         sb.append("\t\tResponseMsg responseMsg = new ResponseMsg();\r\n");
-        sb.append("\t\t" + entityName + " result = " + GenTool.initcap1(entityName) + "Service.save(model);\r\n");
-        sb.append("\t\tresponseMsg.setData(result);\r\n");
-        sb.append("\t\treturn responseMsg;\r\n");
-        sb.append("\t}\r\n\r\n");
-
-        sb.append("\t@DeleteMapping(\"/deleteById/{id}\")\r\n");
-        sb.append("\tpublic ResponseMsg deleteById(@PathVariable Integer id) {\r\n");
-        sb.append("\t\tResponseMsg responseMsg = new ResponseMsg();\r\n");
-        sb.append("\t\t" + GenTool.initcap1(entityName) + "Service.deleteById(id);\r\n");
-        sb.append("\t\treturn responseMsg;\r\n");
-        sb.append("\t}\r\n\r\n");
-
-        sb.append("\t@GetMapping(\"/selectById/{id}\")\r\n");
-        sb.append("\tpublic ResponseMsg selectById(@PathVariable Integer id) {\r\n");
-        sb.append("\t\tResponseMsg responseMsg = new ResponseMsg();\r\n");
-        sb.append("\t\t" + entityName + " result = " + GenTool.initcap1(entityName) + "Service.findById(id);\r\n");
         sb.append("\t\tresponseMsg.setData(result);\r\n");
         sb.append("\t\treturn responseMsg;\r\n");
         sb.append("\t}\r\n\r\n");
 
         sb.append("\t@GetMapping(\"/queryPage\")\r\n");
-        sb.append("\tpublic ResponseMsg queryPage(Integer pageNumber,Integer pageSize) {\r\n");
-        sb.append("\t\tRequestMsg requestMsg = new RequestMsg(pageNumber,pageSize);\r\n");
+        sb.append("\tpublic ResponseMsg queryPage("+ entityName +" model,Integer pageNum,Integer pageSize) {\r\n");
+        sb.append("\t\tRequestMsg requestMsg = new RequestMsg(model,pageNum,pageSize);\r\n");
+        sb.append("\t\tlogger.info(\"params:{}\", JSONUtil.toJsonStr(requestMsg));\r\n");
         sb.append("\t\treturn " + GenTool.initcap1(entityName) + "Service.queryPage(requestMsg);\r\n");
         sb.append("\t}\r\n\r\n");
+
+        sb.append("\t@PostMapping(\"/save\")\r\n");
+        sb.append("\tpublic ResponseMsg save(@RequestBody " + entityName + " model) {\r\n");
+        sb.append("\t\tlogger.info(\"params:{}\", JSONUtil.toJsonStr(model));\r\n");
+        sb.append("\t\t" + entityName + " result = " + GenTool.initcap1(entityName) + "Service.save(model);\r\n");
+        sb.append("\t\tResponseMsg responseMsg = new ResponseMsg();\r\n");
+        sb.append("\t\tresponseMsg.setData(result);\r\n");
+        sb.append("\t\treturn responseMsg;\r\n");
+        sb.append("\t}\r\n\r\n");
+
+        sb.append("\t@DeleteMapping(\"/deleteById/{"+primaryKeyDto.getPrimaryName()+"}\")\r\n");
+        sb.append("\tpublic ResponseMsg deleteById(@PathVariable "+ primaryKeyDto.getPrimaryType()+" "+ primaryKeyDto.getPrimaryName() + ") {\r\n");
+        sb.append("\t\tlogger.info(\"params:{}\", "+primaryKeyDto.getPrimaryName()+");\r\n");
+        sb.append("\t\t" + GenTool.initcap1(entityName) + "Service.deleteById("+primaryKeyDto.getPrimaryName()+");\r\n");
+        sb.append("\t\tResponseMsg responseMsg = new ResponseMsg();\r\n");
+        sb.append("\t\treturn responseMsg;\r\n");
+        sb.append("\t}\r\n\r\n");
+
         sb.append("}");
 
         try {

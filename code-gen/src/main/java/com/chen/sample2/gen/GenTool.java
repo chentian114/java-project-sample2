@@ -4,6 +4,7 @@ package com.chen.sample2.gen;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.chen.sample2.gen.dto.ColumnInfo;
+import com.chen.sample2.gen.dto.PrimaryKeyDto;
 import com.chen.sample2.gen.utils.DaoGen;
 import com.chen.sample2.gen.utils.EntityGen;
 import com.chen.sample2.gen.utils.ServiceGen;
@@ -27,7 +28,6 @@ public class GenTool {
     public static String moduleName = "web";
     public static String rootPackage = "com.chen.sample2."; //基础package
     public static String modulePackage = rootPackage + moduleName+"."; //模块名
-    public static String baseUrl ="BaseController.BaseNgrUrl" ; //controller的base路径
     public static String entityPackageOutPath = modulePackage + "entity";//指定实体生成所在包的路径
     public static String daoPackageOutPath = modulePackage + "dao";//指定Dao所在包的路径
     public static String svcPackageOutPath = modulePackage + "service";//指定service接口所在包的路径
@@ -76,18 +76,19 @@ public class GenTool {
             String tableName = map.getKey();
             String tableComment = objects.getStr("tableComment");
             String entityName = GenTool.initcap(subStrByPrefix(map.getKey(), prefix));
-            String priType = "";
+            PrimaryKeyDto primaryKeyDto = null ;
+            List<ColumnInfo> columnInfoList = objects.getJSONArray("columnInfoList").toList(ColumnInfo.class);
             if (isGenEntity) {
-                priType = EntityGen.parse(tableName, tableComment, entityName, objects.getJSONArray("columnInfoList").toList(ColumnInfo.class));
+                primaryKeyDto = EntityGen.parse(tableName, tableComment, entityName,columnInfoList);
             }
             if (isGenDao) {
                 DaoGen.parse(tableComment, entityName);
             }
             if (isGenService) {
-                ServiceGen.parse(tableComment, entityName);
+                ServiceGen.parse(tableComment, entityName,columnInfoList);
             }
             if (isGenWeb) {
-                WebGen.parse(tableComment, entityName, priType);
+                WebGen.parse(tableComment, entityName, primaryKeyDto);
             }
         }
         logger.info("生成完毕！");

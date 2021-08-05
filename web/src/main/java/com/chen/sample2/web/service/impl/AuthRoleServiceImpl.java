@@ -4,6 +4,8 @@ import com.chen.sample2.web.base.BaseServiceImpl;
 import com.chen.sample2.tool.message.ResponseMsg;
 import com.chen.sample2.tool.message.RequestMsg;
 import com.chen.sample2.tool.message.PageResult;
+import com.chen.sample2.tool.persistence.SimpleCriteria;
+import com.chen.sample2.tool.persistence.SimpleRestrictions;
 import com.chen.sample2.web.entity.AuthRole;
 import com.chen.sample2.web.service.IAuthRoleService;
 import com.chen.sample2.web.dao.AuthRoleDao;
@@ -27,10 +29,18 @@ public class AuthRoleServiceImpl extends BaseServiceImpl<AuthRole> implements IA
 
 	@Override
 	public ResponseMsg queryPage(RequestMsg requestMsg){
+		AuthRole authRole = requestMsg.getParams().toBean(AuthRole.class);
+		SimpleCriteria<AuthRole> simpleCriteria = new SimpleCriteria.Builder<AuthRole>()
+			.add(SimpleRestrictions.eq("name",authRole.getName()))
+			.add(SimpleRestrictions.eq("memo",authRole.getMemo()))
+			.builder();
+
 		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
-		Pageable pageable = PageRequest.of(requestMsg.getPageNumber(), requestMsg.getPageSize(), sort);
-		Page<AuthRole> result = authRoleDao.findAll(pageable);
-		PageResult<AuthRole> pageResult = new PageResult<>(result.getNumber(),result.getSize(),result.getTotalElements(),result.getTotalPages(),result.getContent());
+		Pageable pageable = PageRequest.of(requestMsg.getPageNum(), requestMsg.getPageSize(), sort);
+		Page<AuthRole> page = authRoleDao.findAll(simpleCriteria,pageable);
+
+		PageResult<AuthRole> pageResult = new PageResult<>(page);
+		logger.info("pageResult:{}",pageResult);
 		return ResponseMsg.createSuccessResponse(pageResult);
 	}
 }

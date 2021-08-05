@@ -1,7 +1,7 @@
 server:
   servlet:
     context-path: /sample2/web/api
-  port: 8090
+  port: 8092
 
 logging:
   path: logs/sample2/web

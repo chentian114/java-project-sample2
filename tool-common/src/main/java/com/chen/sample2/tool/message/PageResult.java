@@ -1,5 +1,7 @@
 package com.chen.sample2.tool.message;
 
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 /**
@@ -10,7 +12,7 @@ import java.util.List;
 public class PageResult<T> {
 
     /** 当前页码 */
-    private int pageNumber;
+    private int pageNum;
     /** 每页数据数 */
     private int pageSize;
 
@@ -25,21 +27,28 @@ public class PageResult<T> {
     public PageResult() {
     }
 
+    public PageResult(Page<T> page){
+        this.pageNum = page.getNumber();
+        this.pageSize = page.getSize();
+        this.totalElements = page.getTotalElements();
+        this.totalPages = page.getTotalPages();
+        this.contentList = page.getContent();
+    }
 
     public PageResult(int pageNumber, int pageSize, long totalElements, long totalPages, List<T> contentList) {
-        this.pageNumber = pageNumber;
+        this.pageNum = pageNumber;
         this.pageSize = pageSize;
         this.totalElements = totalElements;
         this.totalPages = totalPages;
         this.contentList = contentList;
     }
 
-    public int getPageNumber() {
-        return pageNumber;
+    public int getPageNum() {
+        return pageNum;
     }
 
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 
     public int getPageSize() {

@@ -28,6 +28,7 @@
         <jwt.version>0.9.1</jwt.version>
         <hutool.version>5.7.6</hutool.version>
         <guomi.version>1.66</guomi.version>
+        <persistence-api.version>2.2</persistence-api.version>
     </properties>
 
     <dependencyManagement>
@@ -56,6 +57,11 @@
             </dependency>
             <!-- 国密加密 -->
 
+            <dependency>
+                <groupId>javax.persistence</groupId>
+                <artifactId>javax.persistence-api</artifactId>
+                <version>${persistence-api.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

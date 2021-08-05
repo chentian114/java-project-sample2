@@ -17,7 +17,7 @@ public class RequestMsg implements Serializable {
     /**
      *  查询页数，从0开始
      */
-    private int pageNumber = DEFAULT_PAGE;
+    private int pageNum = DEFAULT_PAGE;
 
     /**
      * 每页最大数量
@@ -31,29 +31,29 @@ public class RequestMsg implements Serializable {
     public RequestMsg() {
     }
 
-    public RequestMsg(Integer pageNumber, Integer pageSize) {
-        if(pageNumber != null && pageNumber >= 0) {
-            this.pageNumber = pageNumber;
+    public RequestMsg(Integer pageNum, Integer pageSize) {
+        if(pageNum != null && pageNum >= 0) {
+            this.pageNum = pageNum;
         }
         if(pageSize != null && pageSize >= 0) {
             this.pageSize = pageSize;
         }
     }
 
-    public RequestMsg(Object params, Integer pageNumber, Integer pageSize) {
-        this(pageNumber,pageSize);
+    public RequestMsg(Object params, Integer pageNum, Integer pageSize) {
+        this(pageNum,pageSize);
         if(params==null){
             return;
         }
         this.params = JSONUtil.parseObj(params);
     }
 
-    public int getPageNumber() {
-        return pageNumber;
+    public int getPageNum() {
+        return pageNum;
     }
 
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
     }
 
     public int getPageSize() {

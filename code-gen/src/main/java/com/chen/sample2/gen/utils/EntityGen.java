@@ -2,6 +2,7 @@ package com.chen.sample2.gen.utils;
 
 import com.chen.sample2.gen.GenTool;
 import com.chen.sample2.gen.dto.ColumnInfo;
+import com.chen.sample2.gen.dto.PrimaryKeyDto;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -14,17 +15,19 @@ public class EntityGen {
      * 功能：生成实体类主体代码
      *
      * @param tablename
-     * @param columnInfos
+     * @param columnInfoList
      */
-    public static String parse(String tablename, String tableComment, String entityName, List<ColumnInfo> columnInfos) {
-        String priType = "";
+    public static PrimaryKeyDto parse(String tablename, String tableComment, String entityName, List<ColumnInfo> columnInfoList) {
+        String primaryType = "";
+        String primaryName = "";
+
         StringBuffer sb = new StringBuffer();
         boolean isDate = false;
         boolean isSql = false;
         StringBuffer attrSB = new StringBuffer();
         StringBuffer methodSB = new StringBuffer();
         boolean isUUID = false;
-        for (ColumnInfo columnInfo : columnInfos) {
+        for (ColumnInfo columnInfo : columnInfoList) {
 
             attrSB.append("\t/**\r\n");
             attrSB.append("\t * " + columnInfo.getColumnComment() + "\r\n");
@@ -39,7 +42,8 @@ public class EntityGen {
                     attrSB.append("\t@GeneratedValue(generator = \"jpa-uuid\")\r\n");
                     isUUID = true;
                 }
-                priType = columnType;
+                primaryType = columnType;
+                primaryName = GenTool.initcap2(columnInfo.getColumnName()) ;
             }
             if (columnInfo.getDataType().equalsIgnoreCase("datetime")
                 || columnInfo.getDataType().equalsIgnoreCase("timestamp")) {
@@ -70,6 +74,9 @@ public class EntityGen {
         }
         if (isSql) {
             sb.append("import java.sql.*;\r\n");
+        }
+        if(isUUID){
+            sb.append("import org.hibernate.annotations.GenericGenerator;\n");
         }
 
         sb.append("import javax.persistence.*;\r\n");
@@ -115,7 +122,7 @@ public class EntityGen {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return priType;
+        return new PrimaryKeyDto(primaryType,primaryName,isUUID);
     }
 
     /**
