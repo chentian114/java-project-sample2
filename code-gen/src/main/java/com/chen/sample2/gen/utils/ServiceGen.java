@@ -93,7 +93,6 @@ public class ServiceGen {
         sb.append("import org.springframework.data.domain.PageRequest;\r\n");
         sb.append("import org.springframework.data.domain.Pageable;\r\n");
         sb.append("import org.springframework.data.domain.Page;\r\n");
-        sb.append("import org.springframework.data.domain.Sort;\r\n");
         sb.append("import org.springframework.stereotype.Service;\r\n\r\n");
 
 
@@ -128,11 +127,10 @@ public class ServiceGen {
             sb.append("\t\t\t.builder();\n\n");
         }
 
-        sb.append("\t\tSort sort = new Sort(Sort.Direction.DESC, \"createTime\");\n");
-        sb.append("\t\tPageable pageable = PageRequest.of(requestMsg.getPageNum(), requestMsg.getPageSize(), sort);\n");
+        sb.append("\t\tPageable pageable = PageRequest.of(requestMsg.getPageNum(), requestMsg.getPageSize(),RequestMsg.DEFAULT_SORT);\n");
         sb.append("\t\tPage<"+entityName+"> page = " + GenTool.initcap1(entityName) + "Dao.findAll(simpleCriteria,pageable);\n\n");
         sb.append("\t\tPageResult<"+entityName+"> pageResult = new PageResult<>(page);\n");
-        sb.append("\t\tlogger.info(\"pageResult:{}\",pageResult);\n");
+        sb.append("\t\tlogger.info(\"pageResult:{}\", pageResult.toString());\n");
         sb.append("\t\treturn ResponseMsg.createSuccessResponse(pageResult);\n");
         sb.append("\t}\n");
         sb.append("}\r\n");

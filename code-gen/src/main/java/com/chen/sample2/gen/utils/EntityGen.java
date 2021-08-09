@@ -68,6 +68,8 @@ public class EntityGen {
         sb.append("package " + GenTool.entityPackageOutPath + ";\r\n");
         sb.append("\r\n");
 
+        sb.append("import lombok.*;\r\n\r\n");
+        sb.append("import javax.persistence.*;\r\n");
         //判断是否导入工具包
         if (isDate) {
             sb.append("import java.util.Date;\r\n");
@@ -78,9 +80,8 @@ public class EntityGen {
         if(isUUID){
             sb.append("import org.hibernate.annotations.GenericGenerator;\n");
         }
-
-        sb.append("import javax.persistence.*;\r\n");
         sb.append("import java.io.Serializable;\r\n\r\n");
+
 
         //注释部分
         sb.append("/**\r\n");
@@ -89,6 +90,11 @@ public class EntityGen {
         sb.append(" * @author " + GenTool.authorName + "\r\n");
         sb.append(" */ \r\n");
 
+        sb.append("@NoArgsConstructor\r\n");
+        sb.append("@AllArgsConstructor\r\n");
+        sb.append("@Data\r\n");
+        sb.append("@Builder\r\n");
+        sb.append("@ToString\r\n");
         sb.append("@Entity\r\n");
         sb.append("@Table(name = \"" + tablename + "\")\r\n");
         if (isUUID) {
@@ -98,7 +104,7 @@ public class EntityGen {
         //实体部分
         sb.append("public class " + entityName + " implements Serializable {\r\n\r\n");
         sb.append(attrSB.toString());
-        sb.append(methodSB.toString());
+//        sb.append(methodSB.toString());
         sb.append("}\r\n");
 
         //System.out.println(sb.toString());

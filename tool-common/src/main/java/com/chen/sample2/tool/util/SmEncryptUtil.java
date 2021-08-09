@@ -1,4 +1,4 @@
-package com.chen.sample2.tool.utils;
+package com.chen.sample2.tool.util;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.HexUtil;

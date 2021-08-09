@@ -1,4 +1,4 @@
-package com.chen.sample2.tool.utils;
+package com.chen.sample2.tool.util;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
@@ -23,7 +23,6 @@ public class AESKeyGenUtil {
         testAes();
         System.out.println(StrUtil.join("a","b","c"));
        // System.out.println(HashUtil.elfHash("2019121614262301000000000100000000010100"));
-
     }
 
 

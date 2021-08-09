@@ -3,6 +3,7 @@ package com.chen.sample2.tool.message;
 
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import org.springframework.data.domain.Sort;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
 public class RequestMsg implements Serializable {
     public static final int DEFAULT_PAGE = 0;
     public static final int DEFAULT_SIZE = 10;
+    public static final Sort DEFAULT_SORT = Sort.by(Sort.Direction.DESC, "createTime");
 
     /**
      *  查询页数，从0开始

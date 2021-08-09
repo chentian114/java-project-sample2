@@ -1,7 +1,9 @@
 package com.chen.sample2.web.entity;
 
-import java.util.Date;
+import lombok.*;
+
 import javax.persistence.*;
+import java.util.Date;
 import java.io.Serializable;
 
 /**
@@ -9,6 +11,11 @@ import java.io.Serializable;
  *
  * @author Chentian
  */ 
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
+@ToString
 @Entity
 @Table(name = "t_auth_role")
 public class AuthRole implements Serializable {
@@ -44,46 +51,6 @@ public class AuthRole implements Serializable {
 	 */ 
 	@Column(name = "modify_time")
 	private Date modifyTime;
-
-	public Integer getId(){
-		return id;
-	}
-
-	public void setId(Integer id){
-		this.id=id;
-	}
-
-	public String getName(){
-		return name;
-	}
-
-	public void setName(String name){
-		this.name=name;
-	}
-
-	public String getMemo(){
-		return memo;
-	}
-
-	public void setMemo(String memo){
-		this.memo=memo;
-	}
-
-	public Date getCreateTime(){
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime){
-		this.createTime=createTime;
-	}
-
-	public Date getModifyTime(){
-		return modifyTime;
-	}
-
-	public void setModifyTime(Date modifyTime){
-		this.modifyTime=modifyTime;
-	}
 
 }
 

@@ -24,7 +24,6 @@ public class WebGen {
         sb.append("import " + GenTool.rootPackage + "tool.message.ResponseMsg;\r\n");
         sb.append("import " + GenTool.svcPackageOutPath + ".I" + entityName + "Service;\r\n");
         sb.append("import org.springframework.beans.factory.annotation.Autowired;\r\n");
-        sb.append("import cn.hutool.json.JSONUtil;\r\n");
         sb.append("import org.springframework.web.bind.annotation.*;\r\n\r\n");
 
         //注释部分
@@ -54,13 +53,13 @@ public class WebGen {
         sb.append("\t@GetMapping(\"/queryPage\")\r\n");
         sb.append("\tpublic ResponseMsg queryPage("+ entityName +" model,Integer pageNum,Integer pageSize) {\r\n");
         sb.append("\t\tRequestMsg requestMsg = new RequestMsg(model,pageNum,pageSize);\r\n");
-        sb.append("\t\tlogger.info(\"params:{}\", JSONUtil.toJsonStr(requestMsg));\r\n");
+        sb.append("\t\tlogger.info(\"pageNum:{} pageSize:{} model:{}\", pageNum,pageSize,model.toString());\r\n");
         sb.append("\t\treturn " + GenTool.initcap1(entityName) + "Service.queryPage(requestMsg);\r\n");
         sb.append("\t}\r\n\r\n");
 
         sb.append("\t@PostMapping(\"/save\")\r\n");
         sb.append("\tpublic ResponseMsg save(@RequestBody " + entityName + " model) {\r\n");
-        sb.append("\t\tlogger.info(\"params:{}\", JSONUtil.toJsonStr(model));\r\n");
+        sb.append("\t\tlogger.info(\"params:{}\", model.toString());\r\n");
         sb.append("\t\t" + entityName + " result = " + GenTool.initcap1(entityName) + "Service.save(model);\r\n");
         sb.append("\t\tResponseMsg responseMsg = new ResponseMsg();\r\n");
         sb.append("\t\tresponseMsg.setData(result);\r\n");

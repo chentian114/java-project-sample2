@@ -1,7 +1,7 @@
 package com.chen.sample2.tool.persistence;
 
 
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Collection;
 
@@ -17,7 +17,7 @@ public class SimpleRestrictions {
      * 等于
      */
     public static SimpleExpression eq(String fieldName, Object value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.EQ);
@@ -27,7 +27,7 @@ public class SimpleRestrictions {
      * 集合包含某个元素
      */
     public static SimpleExpression hasMember(String fieldName, Object value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.IS_MEMBER);
@@ -37,7 +37,7 @@ public class SimpleRestrictions {
      * 不等于
      */
     public static SimpleExpression ne(String fieldName, Object value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.NE);
@@ -47,7 +47,7 @@ public class SimpleRestrictions {
      * 全模糊匹配，例如 %value%
      */
     public static SimpleExpression like(String fieldName, String value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.LIKE);
@@ -57,7 +57,7 @@ public class SimpleRestrictions {
      * 左模糊匹配，例如 %value
      */
     public static SimpleExpression likeLeft(String fieldName, String value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.LIKE_LEFT);
@@ -67,7 +67,7 @@ public class SimpleRestrictions {
      * 右模糊匹配，例如 value%
      */
     public static SimpleExpression likeRight(String fieldName, String value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.LIKE_RIGHT);
@@ -77,7 +77,7 @@ public class SimpleRestrictions {
      * 大于
      */
     public static SimpleExpression gt(String fieldName, Object value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.GT);
@@ -87,7 +87,7 @@ public class SimpleRestrictions {
      * 小于
      */
     public static SimpleExpression lt(String fieldName, Object value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.LT);
@@ -97,7 +97,7 @@ public class SimpleRestrictions {
      * 小于等于
      */
     public static SimpleExpression lte(String fieldName, Object value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.LTE);
@@ -107,7 +107,7 @@ public class SimpleRestrictions {
      * 大于等于
      */
     public static SimpleExpression gte(String fieldName, Object value) {
-        if (StringUtils.isEmpty(value)) {
+        if (ObjectUtils.isEmpty(value)) {
             return null;
         }
         return new SimpleExpression(fieldName, value, SimpleCriterion.Operator.GTE);

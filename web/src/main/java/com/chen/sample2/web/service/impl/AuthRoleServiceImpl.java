@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,12 +34,11 @@ public class AuthRoleServiceImpl extends BaseServiceImpl<AuthRole> implements IA
 			.add(SimpleRestrictions.eq("memo",authRole.getMemo()))
 			.builder();
 
-		Sort sort = new Sort(Sort.Direction.DESC, "createTime");
-		Pageable pageable = PageRequest.of(requestMsg.getPageNum(), requestMsg.getPageSize(), sort);
+		Pageable pageable = PageRequest.of(requestMsg.getPageNum(), requestMsg.getPageSize(),RequestMsg.DEFAULT_SORT);
 		Page<AuthRole> page = authRoleDao.findAll(simpleCriteria,pageable);
 
 		PageResult<AuthRole> pageResult = new PageResult<>(page);
-		logger.info("pageResult:{}",pageResult);
+		logger.info("pageResult:{}", pageResult.toString());
 		return ResponseMsg.createSuccessResponse(pageResult);
 	}
 }
